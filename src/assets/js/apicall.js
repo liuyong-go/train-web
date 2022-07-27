@@ -19,7 +19,7 @@ const apicall = {
                         if (res.status === 0) {
                             resolve(res.data);
                         } else {
-                            reject(res.msg);
+                            reject(res.data.msg);
                         }
                     })
                     .catch(err => {

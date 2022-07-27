@@ -72,6 +72,7 @@ export default {
                         this.$router.replace({ name: 'Home' })
                     })
                     .catch((err) => {
+                        console.log("err",err)
                         ElMessage({
                             showClose: true,
                             message: err,

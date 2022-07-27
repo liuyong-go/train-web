@@ -1,7 +1,8 @@
 <template>
     <Layout>
         <template v-slot:main>
-            <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+            <!-- <div class="login-title">火车票售票系统</div> -->
+            <div style="display: flex; justify-content: center; align-items: center; margin-top: 100px;">
                 <el-form
                     ref="loginForm"
                     :model="loginForm"
@@ -36,6 +37,7 @@
 <script>
 import { ElMessage } from 'element-plus'
 import Layout from '../views/Layout.vue';
+
 export default {
      name: 'TrainLogin',
     data() {
@@ -54,13 +56,32 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    this.$store.commit('login', this.loginForm.username)
-                    ElMessage({
-                        showClose: true,
-                        message: `用户 ${this.loginForm.username} 登陆成功!`,
-                        type: 'success',
+                    const apicall = require('../assets/js/apicall').default
+                    const formData = new FormData();
+                    formData.append("mobile",this.loginForm.username)
+                    formData.append("password",this.loginForm.userpwd)
+                    apicall.fetch('/user/doSignIn',apicall.POST,formData)
+                    .then((res) => {
+                        //this.$store.commit('login', this.loginForm.username)
+                        console.log("result",res)
+                        ElMessage({
+                            showClose: true,
+                            message: "cess",
+                            type: 'success',
+                        })
+                        this.$router.replace({ name: 'Home' })
                     })
-                    this.$router.replace({ name: 'Home' })
+                    .catch((err) => {
+                        ElMessage({
+                            showClose: true,
+                            message: err,
+                            type: 'sucess',
+                        })
+                    });
+                    
+                  
+                    
+                    
                 } else {
                     return false
                 }

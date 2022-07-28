@@ -16,6 +16,6 @@ app.mount('#app')
 
 
 router.beforeEach((to, from, next) => {
-    if (to.name !== 'TrainLogin' && store.state.username === '') next({ name: 'TrainLogin' })
+    if (to.name !== 'TrainLogin' && localStorage.getItem('auth') == null) next({ name: 'TrainLogin' })
     else next()
   })

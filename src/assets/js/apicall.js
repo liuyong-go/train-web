@@ -16,7 +16,7 @@ const apicall = {
             return new Promise((resolve, reject) => {       
                    axios({url, method,data,validateStatus: () => true,headers, timeout})
                     .then(res => {
-                        if (res.status === 0) {
+                        if (res.data.code == 0) {
                             resolve(res.data);
                         } else {
                             reject(res.data.msg);

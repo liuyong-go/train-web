@@ -1,9 +1,10 @@
 <template>
+  <div class="login-title">火车票售票系统</div>
     <el-container style="height: 100%;">
         <el-main>
             <slot name="main"></slot>
         </el-main>
-        <el-footer height="40px" style="color: #909399; text-align: center;">©2021 Leo xxxxxx.com</el-footer>
+        <el-footer height="40px" style="color: #909399; text-align: center;">©2022 liuyong 火车票售票系统</el-footer>
     </el-container>
 </template>
 

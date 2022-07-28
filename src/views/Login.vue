@@ -63,13 +63,13 @@ export default {
                     apicall.fetch('/user/doSignIn',apicall.POST,formData)
                     .then((res) => {
                         //this.$store.commit('login', this.loginForm.username)
-                        console.log("result",res)
+                        localStorage.setItem("auth",res.login_token)
                         ElMessage({
                             showClose: true,
-                            message: "cess",
+                            message: "登录成功",
                             type: 'success',
                         })
-                        this.$router.replace({ name: 'Home' })
+                        this.$router.replace({ name: 'TrainHome' })
                     })
                     .catch((err) => {
                         console.log("err",err)

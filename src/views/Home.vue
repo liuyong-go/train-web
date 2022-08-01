@@ -98,8 +98,8 @@
       </el-radio-group>
     </el-form-item>
     <el-form-item label="乘车人" >
-        <el-checkbox-group v-model="passengers" v-for="(item,index) in contacts" :key="index">
-          <el-checkbox label="{{item.id}}" >{{item.username}}</el-checkbox>
+        <el-checkbox-group v-model="passengers" >
+          <el-checkbox v-for="item in contacts" :key="item.id" :label="item.id" >{{item.username}}</el-checkbox>
         </el-checkbox-group>
     </el-form-item>
   </el-form>
@@ -186,6 +186,7 @@ export default {
            apicall.fetch('/my-contacts',apicall.GET,{},{},true)
           .then((res) => {
               if (res.contacts.length) {
+                this.contacts = []
                 res.contacts.forEach((item) => {
                   this.contacts.push(item)
                 })
@@ -243,7 +244,6 @@ export default {
             }
             this.getcontacts()
             return dates
-            
         },
         buyticket(data){
             console.log(data.train_id)

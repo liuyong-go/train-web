@@ -4,6 +4,7 @@ axios.defaults.baseURL='http://127.0.0.1:8010'
 
 const apicall = {
     POST:"POST",
+    GET:"GET",
     fetch:function(url,
         method,
         data = {},

@@ -1,7 +1,7 @@
 <template>
 <Layout>
   <template v-slot:main >
-    <div style="display: flex; justify-content: center; align-items: center; margin-top: 100px;">
+    <div style="display: flex; justify-content: center; align-items: center; margin: 50px; 0px">
         <el-form
               inline="true"
               ref="searchForm"
@@ -82,17 +82,41 @@
       <template v-slot="scope">
         <el-button
           size="mini"
-          @click="buyticket(scope.row)">抢票</el-button>
+          @click="buyticket(scope.row);">抢票</el-button>
       </template>
     </el-table-column>
   </el-table>
     </div>
 
-
+<el-dialog title="购买火车票" v-model="dialogFormVisible">
+  <el-form :model="form">
+    <el-form-item label="座位" prop="resource">
+      <el-radio-group v-model="seat_level">
+        <el-radio label="0">商务座</el-radio>
+        <el-radio label="1">一等座</el-radio>
+        <el-radio label="2">二等座</el-radio>
+      </el-radio-group>
+    </el-form-item>
+    <el-form-item label="乘车人" >
+        <el-checkbox-group v-model="passengers" v-for="(item,index) in contacts" :key="index">
+          <el-checkbox label="{{item.id}}" >{{item.username}}</el-checkbox>
+        </el-checkbox-group>
+    </el-form-item>
+  </el-form>
+    <el-button @click="dialogFormVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dobuyticket()">确 定</el-button>
+</el-dialog>
   </template>
 
+
+
+
 </Layout>
+
 </template>
+
+
+
 
 <script>
 // @ is an alias to /src
@@ -103,6 +127,7 @@ export default {
   components: {
     Layout
   },
+  
   data() {
       return {
         startSite:{
@@ -146,11 +171,35 @@ export default {
           site_name: '鹤壁东'
         }
         ],
+        dialogFormVisible:false,
         dates:this.getNext15Days(),
-        tableData: []
+        tableData: [],
+        seat_level:0,
+        choose_data:{},
+        passengers:[],
+        contacts:[],
       }
     },
     methods:{
+        getcontacts(){
+           const apicall = require('../assets/js/apicall').default
+           apicall.fetch('/my-contacts',apicall.GET,{},{},true)
+          .then((res) => {
+              if (res.contacts.length) {
+                res.contacts.forEach((item) => {
+                  this.contacts.push(item)
+                })
+              }   
+          })
+          .catch((err) => {
+              console.log("err",err)
+              ElMessage({
+                  showClose: true,
+                  message: err,
+                  type: 'sucess',
+              })
+          });
+        },
         submitSearch(){
           const apicall = require('../assets/js/apicall').default
           const formData = new FormData();
@@ -192,12 +241,19 @@ export default {
               }
               dates.push(y + "-" + m + "-" + d)
             }
+            this.getcontacts()
             return dates
             
         },
         buyticket(data){
-          console.log(data)
-        }
+            console.log(data.train_id)
+            this.choose_data = data
+            this.dialogFormVisible = true
+       },
+       dobuyticket(){
+          console.log(this.seat_level)
+          console.log(this.passengers)
+       }
     }
 }
 </script>

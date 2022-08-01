@@ -2,20 +2,11 @@
 <Layout>
   <template v-slot:main >
     <div style="display: flex; justify-content: center; align-items: center; margin-top: 100px;">
-      <el-card class="box-card">
-        <template v-slot:header>
-          <div style="text-align:center">
-              <span >车票查询</span>
-          </div>
-        
-        </template>
         <el-form
+              inline="true"
               ref="searchForm"
-              status-icon
-              label-width="120px"
-              style="width: 400px;"
-          >
-         <el-form-item label="起始站" prop="start" >
+              status-icon>
+         <el-form-item label="起始站"  >
           <el-select v-model="startSite"  value-key="site_id">
             <el-option
                 v-for="item in options"
@@ -25,7 +16,7 @@
               </el-option>
             </el-select>
            </el-form-item>
-          <el-form-item label="到达站" prop="arrive">
+          <el-form-item label="到达站" >
            <el-select v-model="endSite"   value-key="site_id">
             <el-option
               v-for="item in options"
@@ -35,7 +26,7 @@
             </el-option>
           </el-select>
            </el-form-item>
-          <el-form-item label="日期" prop="arrive" >
+          <el-form-item label="日期" >
            <el-select v-model="chooseDate" >
             <el-option
               v-for="item in dates"
@@ -45,11 +36,56 @@
             </el-option>
           </el-select>
            </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="submitSearch">查询车票</el-button>
+          </el-form-item>
          </el-form>
-        <div style="margin:50px 20px ;display: flex; justify-content: center; align-items: center;">
-          <el-button type="primary" round  @click="submitSearch()">查询车票</el-button>
-        </div>
-      </el-card>
+    </div>
+
+    <div>
+      <el-table
+    :data="tableData"
+    stripe
+    style="width: 100%">
+    <el-table-column
+      prop="train_name"
+      label="车次"
+      >
+    </el-table-column>
+    <el-table-column
+      prop="start_name"
+      label="起始站/时间"
+      >
+    </el-table-column>
+    <el-table-column
+      prop="end_name"
+      label="到达站/时间"
+    >
+    </el-table-column>
+    <el-table-column
+      prop="seat_business_left"
+      label="商务座"
+      >
+    </el-table-column>
+    <el-table-column
+      prop="seat_first_left"
+      label="一等座"
+    >
+    </el-table-column>
+    <el-table-column
+      prop="seat_second_left"
+      label="二等座"
+    >
+    </el-table-column>
+    <el-table-column>
+      <template v-slot="scope">
+        <el-button
+          size="mini"
+          @click="buyticket(scope.row)">抢票</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
     </div>
 
 
@@ -60,6 +96,7 @@
 
 <script>
 // @ is an alias to /src
+import { ElMessage } from 'element-plus'
 import Layout from "../views/Layout.vue";
 export default {
   name: 'TrainHome',
@@ -109,14 +146,35 @@ export default {
           site_name: '鹤壁东'
         }
         ],
-        dates:this.getNext15Days()
+        dates:this.getNext15Days(),
+        tableData: []
       }
     },
     methods:{
         submitSearch(){
-          console.log(this.chooseDate)
-          console.log(this.startSite)
-          console.log(this.endSite)
+          const apicall = require('../assets/js/apicall').default
+          const formData = new FormData();
+          formData.append("startSiteID",this.startSite.site_id)
+          formData.append("endSiteID",this.endSite.site_id)
+          formData.append("chooseDate",this.chooseDate)
+          apicall.fetch('/search',apicall.POST,formData,{},true)
+          .then((res) => {
+              if (res.train_list.length) {
+                res.train_list.forEach((item) => {
+                  item.start_name = item.start_name + '/'+item.start_time
+                  item.end_name = item.end_name + '/'+item.end_time
+                  this.tableData.push(item)
+                })
+              }   
+          })
+          .catch((err) => {
+              console.log("err",err)
+              ElMessage({
+                  showClose: true,
+                  message: err,
+                  type: 'sucess',
+              })
+          });
         },
          getNext15Days() {
             let dates = []
@@ -136,6 +194,9 @@ export default {
             }
             return dates
             
+        },
+        buyticket(data){
+          console.log(data)
         }
     }
 }

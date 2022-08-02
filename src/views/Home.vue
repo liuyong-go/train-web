@@ -251,8 +251,29 @@ export default {
             this.dialogFormVisible = true
        },
        dobuyticket(){
-          console.log(this.seat_level)
-          console.log(this.passengers)
+          var that = this
+          const apicall = require('../assets/js/apicall').default
+          const formData = new FormData();
+          formData.append("train_id",this.choose_data.train_id)
+          formData.append("from_site",this.choose_data.start_site_id)
+          formData.append("to_site",this.choose_data.end_site_id)
+          formData.append("level",this.seat_level)
+          formData.append("depart_date",this.chooseDate)
+          formData.append("passengers",this.passengers)
+          apicall.fetch('/buy-ticket',apicall.POST,formData,{},true)
+          .then(() => {
+              console.log("suc")
+              that.$router.replace({ name: 'MyTicket' })
+          })
+          .catch((err) => {
+              console.log("err",err)
+              ElMessage({
+                  showClose: true,
+                  message: err,
+                  type: 'sucess',
+              })
+          });
+
        }
     }
 }

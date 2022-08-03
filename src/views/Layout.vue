@@ -1,5 +1,12 @@
 <template>
-  <div class="login-title">火车票售票系统</div>
+
+<el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" >
+<el-menu-item :index="main" class="login-title" disabled=true ><span style="font-weight:bold; color:#000; font-size:20px">火车票售票系统</span></el-menu-item>
+<el-menu-item @click="deliveryRouter('TrainHome')" :index="TrainHome">购票</el-menu-item>
+<el-menu-item @click="deliveryRouter('MyTicket')" :index="MyTicket" >我的车票</el-menu-item>
+</el-menu>
+
+  <!-- <div class="login-title">火车票售票系统</div> -->
     <el-container style="height: 100%;">
         <el-main>
             <slot name="main"></slot>
@@ -35,6 +42,9 @@ export default {
             })
             this.$store.commit('logoff')
             this.$router.replace({ name: 'Login' })
+        },
+        deliveryRouter(route){
+             this.$router.replace({ name: route })
         }
     }
 }

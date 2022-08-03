@@ -262,7 +262,11 @@ export default {
           formData.append("passengers",this.passengers)
           apicall.fetch('/buy-ticket',apicall.POST,formData,{},true)
           .then(() => {
-              console.log("suc")
+              ElMessage({
+                  showClose: true,
+                  message: "购票成功",
+                  type: 'sucess',
+              })
               that.$router.replace({ name: 'MyTicket' })
           })
           .catch((err) => {

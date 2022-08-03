@@ -2,8 +2,8 @@
 
 <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" >
 <el-menu-item :index="main" class="login-title" disabled=true ><span style="font-weight:bold; color:#000; font-size:20px">火车票售票系统</span></el-menu-item>
-<el-menu-item @click="deliveryRouter('TrainHome')" :index="TrainHome">购票</el-menu-item>
-<el-menu-item @click="deliveryRouter('MyTicket')" :index="MyTicket" >我的车票</el-menu-item>
+<el-menu-item @click="deliveryRouter('TrainHome')" index="/">购票</el-menu-item>
+<el-menu-item @click="deliveryRouter('MyTicket')" index="/myticket" >我的车票</el-menu-item>
 </el-menu>
 
   <!-- <div class="login-title">火车票售票系统</div> -->
@@ -23,7 +23,9 @@ export default {
     setup() {
         const router = useRouter();
         const route = useRoute();
+        console.log("path",route.path)
         return {
+            
             routes: router.getRoutes().filter(value => value.name != 'Login' && value.name != 'Logout'),
             activeIndex: route.path,
         }

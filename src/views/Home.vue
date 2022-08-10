@@ -82,7 +82,7 @@
       <template v-slot="scope">
         <el-button
           size="mini"
-          @click="buyticket(scope.row);">抢票</el-button>
+          @click="buyticket(scope.row);">购票</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -209,6 +209,7 @@ export default {
           formData.append("chooseDate",this.chooseDate)
           apicall.fetch('/search',apicall.POST,formData,{},true)
           .then((res) => {
+              this.tableData = []
               if (res.train_list.length) {
                 res.train_list.forEach((item) => {
                   item.start_name = item.start_name + '/'+item.start_time
